@@ -7,7 +7,8 @@ pip install ultralytics
 Python ultralytics/infer.py
 ```
 **C++ Cfg**
-![avatar](/ultralytics/dog2.jpeg)
+![avatar](/cfg.jpeg)
+![avatar](/cfg2.jpeg)
 
 链接器->输入
 ```bash
