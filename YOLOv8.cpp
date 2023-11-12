@@ -58,8 +58,7 @@ void doInference(IExecutionContext& context, float* input, float* output, int ba
     assert(engine.getNbBindings() == 2);//engine.getNbBindings() 函数返回引擎对象 engine 中的绑定数量，即模型的输入和输出的总数。每个绑定对应一个模型的输入或输出。
     void* buffers[2];//这段代码定义了一个名为 buffers 的数组，其元素类型为 void*，即指针类型。
 
-    // In order to bind the buffers, we need to know the names of the input and output tensors.
-    // Note that indices are guaranteed to be less than IEngine::getNbBindings()
+
     const int inputIndex = engine.getBindingIndex(INPUT_NAME);
     const int outputIndex = engine.getBindingIndex(OUTPUT_NAME);
 
@@ -68,17 +67,16 @@ void doInference(IExecutionContext& context, float* input, float* output, int ba
     CHECK(cudaMalloc(&buffers[outputIndex], out_num * sizeof(float)));//给cuda分配内存
     //cudaMalloc 函数来为 buffers[outputIndex] 分配一块内存空间。
 
-    // Create stream
+
     cudaStream_t stream;
     cudaStreamCreate(&stream);
 
-    // DMA input batch data to device, infer on the batch asynchronously, and DMA output back to host
     cudaMemcpyAsync(buffers[inputIndex], input, batchSize * 3 * INPUT_H * INPUT_W * sizeof(float), cudaMemcpyHostToDevice, stream);
     context.enqueue(batchSize, buffers, stream, nullptr);//通常TensorRT的执行是异步的，因此将kernels加入队列放在CUDA stream流上
     cudaMemcpyAsync(output, buffers[outputIndex], out_num * sizeof(float), cudaMemcpyDeviceToHost, stream);
     cudaStreamSynchronize(stream);
 
-    // Release stream and buffers
+
     cudaStreamDestroy(stream);
     cudaFree(buffers[inputIndex]);
     cudaFree(buffers[outputIndex]);
