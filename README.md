@@ -3,12 +3,14 @@
 ```bash
 pip install ultralytics
 ```
+导出ONNX（这里ONNX和原版做了修改）
 ```bash
 Python ultralytics/infer.py
+Python ultralytics/onnx_to_smi.py
 ```
 **C++ Cfg**
-![avatar](/cfg.jpeg)
-![avatar](/cfg2.jpeg)
+![avatar](/cfg.png)
+![avatar](/cfg2.png)
 
 链接器->输入
 ```bash
